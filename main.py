@@ -1,11 +1,13 @@
+import os
 import time
 import logging
 from pathlib import Path
+from dotenv import load_dotenv
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # Logolás beállítása fájlba és konzolra
-LOG_FILE = Path(__file__).parent / "watchdog.log"
+LOG_FILE = Path(__file__).parent / "./log/watchdog.log"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(message)s",
@@ -16,9 +18,6 @@ logging.basicConfig(
     ],
 )
 logger = logging.getLogger(__name__)
-
-# Figyelt mappa
-WATCH_PATH = "c:/Users/gallz/Downloads/"
 
 
 class MyHandler(FileSystemEventHandler):
@@ -48,6 +47,11 @@ class MyHandler(FileSystemEventHandler):
 
 
 def main():
+    load_dotenv()
+    # Figyelt mappa
+    WATCH_PATH = os.getenv("WATCH_PATH")
+    if not WATCH_PATH:
+        raise ValueError("WATCH_PATH nincs beállítva a .env fájlban!")
     logger.info("Watchdog elindult — figyelt mappa: %s", WATCH_PATH)
     event_handler = MyHandler()
     observer = Observer()
