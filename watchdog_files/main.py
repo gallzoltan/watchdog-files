@@ -1,13 +1,22 @@
 import os
 import time
 import logging
+from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # Logolás beállítása fájlba és konzolra
-LOG_FILE = Path(__file__).parent / "./log/watchdog.log"
+LOG_DIR = Path.cwd() / "log"
+LOG_DIR.mkdir(exist_ok=True)
+LOG_FILE = LOG_DIR / "watchdog.log"
+
+# Régi log fájl átnevezése időbélyeggel
+if LOG_FILE.exists():
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    LOG_FILE.rename(LOG_FILE.with_name(f"watchdog_{timestamp}.log"))
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(message)s",
