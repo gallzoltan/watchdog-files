@@ -56,7 +56,7 @@ class MyHandler(FileSystemEventHandler):
 
 
 def main():
-    load_dotenv()
+    load_dotenv(Path.cwd() / ".env")
     # Figyelt mappa
     WATCH_PATH = os.getenv("WATCH_PATH")
     if not WATCH_PATH:
